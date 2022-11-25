@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "start:build": "next build && next start",
     "lint": "next lint",
     "prepare": "husky install",
     "test": "jest --watchAll --coverage",
