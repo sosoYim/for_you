@@ -9,6 +9,7 @@
     "lint": "next lint",
     "prepare": "husky install",
     "test": "jest --watchAll --coverage",
+    "test:ci": "jest --ci --reporters='default' --reporters='github-actions'",
     "test:update": "jest -u",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
