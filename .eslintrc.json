@@ -16,6 +16,7 @@
     "prettier"
   ],
   "rules": {
+    "react/require-default-props": "off",
     "react/jsx-props-no-spreading": ["error", { "exceptions": ["Component"] }],
     "react/jsx-sort-props": [
       "error",
