@@ -3,7 +3,14 @@
   "parserOptions": {
     "project": ["./tsconfig.json"]
   },
-  "plugins": ["simple-import-sort", "sort-destructure-keys", "sort-keys-fix"],
+  "plugins": [
+    "simple-import-sort",
+    "sort-destructure-keys",
+    "sort-keys-fix",
+    "jest",
+    "jest-formatting",
+    "typescript-sort-keys"
+  ],
   "extends": [
     "eslint:recommended",
     "airbnb",
@@ -11,7 +18,9 @@
     "airbnb/hooks",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:eslint-plugin-typescript-sort-keys/recommended",
     "plugin:storybook/recommended",
+    "plugin:jest-formatting/recommended",
     "plugin:@next/next/recommended",
     "next/core-web-vitals",
     "prettier"
@@ -50,6 +59,7 @@
       { "selector": "typeLike", "format": ["StrictPascalCase"] }
     ],
     "sort-destructure-keys/sort-destructure-keys": "error",
-    "sort-keys-fix/sort-keys-fix": ["error", "asc", { "natural": true }]
+    "sort-keys-fix/sort-keys-fix": ["error", "asc", { "natural": true }],
+    "import/no-anonymous-default-export": "off"
   }
 }
