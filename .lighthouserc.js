@@ -1,20 +1,14 @@
 module.exports = {
   ci: {
     collect: {
-      extends: 'lighthouse:default',
-      startServerCommand: 'yarn start:build', // 서버를 키는 명령어를 통해서도 실행 가능
-      url: ['http://localhost:3000'],
-      numberOfRuns: 3,
+      url: ['http://localhost:3000/'],
+      startServerCommand: 'rails server -e production',
     },
     upload: {
-      target: 'filesystem',
-      outputDir: './lhci_reports',
-      reportFilenamePattern: '%%PATHNAME%%-%%DATETIME%%-report.%%EXTENSION%%',
+      target: 'temporary-public-storage',
     },
     assert: {
-      assertions: {
-        'first-contentful-paint': ['error', { minScore: 0.6 }],
-      },
+      preset: 'lighthouse:recommended',
     },
   },
 }

@@ -3,3 +3,6 @@ package-lock.json
 public
 node_modules
 /*.config.js
+
+lighthouserc.js
+/scripts
