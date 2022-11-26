@@ -1,0 +1,29 @@
+name: test
+on:
+  pull_request:
+    paths:
+      - src/**
+    branches:
+      - develop
+
+env:
+  NODE_VERSION: 16
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout My Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          cache: yarn
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Test
+        run: yarn test:ci

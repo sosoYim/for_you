@@ -1,0 +1,39 @@
+name: deploy-dev
+on:
+  push:
+    branches:
+      - develop
+
+env:
+  NAME: yarn
+  NODE_VERSION: 16
+  BUILD_CACHE: true
+  BUILD_LOCK_PATH: '**/yarn.lock'
+  BUILD_COMMANDS: yarn install && yarn test:ci && yarn build
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout My Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          cache: yarn
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Get yarn cache directory path
+        if: ${{ env.NAME == 'yarn' }}
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+      - name: Deploy
+        uses: ./.github/actions/deploy
+        with:
+          name: ${{ env.NAME }}
+          build-cache: ${{ env.BUILD_CACHE }}
+          build-cache-path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          build-lock-path: ${{ env.BUILD_LOCK_PATH }}
+          build-commands: ${{ env.BUILD_COMMANDS }}

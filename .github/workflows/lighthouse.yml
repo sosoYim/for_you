@@ -1,0 +1,55 @@
+name: lighthouse
+on:
+  pull_request:
+    paths:
+      - public/**
+      - scripts/**
+      - src/**
+    branches:
+      - develop
+
+env:
+  NODE_VERSION: 16
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout My Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          cache: yarn
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn build
+
+      - name: Install Lighthouse CI
+        run: yarn add -D @lhci/cli
+
+      - name: Run Lighthouse CI
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN  }}
+        run: yarn lhci autorun
+
+      - name: Format Lighthouse Score
+        id: format_lighthouse_score
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const getLighthouseComment = require('./scripts/lighthouseCommentMaker.js')
+            const comments = getLighthouseComment('${{ github.workspace }}')
+            core.setOutput('comments', comments);
+      - name: Comment Lighthouse Results
+        uses: unsplash/comment-on-pr@v1.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: ${{ steps.format_lighthouse_score.outputs.comments }}

@@ -1,0 +1,46 @@
+description: Deploy My Web on Vercel Cloud
+inputs:
+  name:
+    description: Name
+    required: false
+    default: npm
+  build-cache:
+    description: Enable caching dependencies
+    required: false
+    default: true
+  build-cache-path:
+    description: Build cache path
+    required: false
+    default: ~/.npm
+  build-lock-path:
+    description: Build lock path
+    required: false
+    default: '**/package-lock.json'
+  build-commands:
+    description: Build commands
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Caching
+      uses: actions/cache@v3
+      if: ${{ inputs.build-cache == 'true' }}
+      with:
+        path: ${{ inputs.build-cache-path }}
+        key: ${{ runner.os }}-${{ inputs.name }}-${{ hashFiles(inputs.build-lock-path) }}
+        restore-keys: |
+          ${{ runner.os }}-${{ inputs.name }}-
+    - name: Test & Build
+      shell: bash
+      run: ${{ inputs.build-commands }}
+
+    - name: Upload build output to Vercel Cloud
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.ORG_ID}}
+        vercel-project-id: ${{ secrets.PROJECT_ID}}
+        scope: ${{ secrets.ORG_ID }}
+        github-comment: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}
